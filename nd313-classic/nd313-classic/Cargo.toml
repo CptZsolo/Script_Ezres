@@ -1,0 +1,16 @@
+[package]
+name = "nd313"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[patch.crates-io]
+lotussim-script = { path = "../../script-rs/lotus-script" }
+lotussim-script-sys = { path = "../../script-rs/lotus-script-sys" }
+lotus-extra = { path = "../../lotus-extra" }
+
+[dependencies]
+lotussim-script = "*"
+lotus-extra = "0.3"

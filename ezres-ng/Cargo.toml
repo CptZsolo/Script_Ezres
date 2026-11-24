@@ -1,0 +1,11 @@
+[package]
+name = "ezres-ng"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+lotus-extra = "0.3.7"
+lotussim-script = "*"
