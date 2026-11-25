@@ -31,22 +31,22 @@ pub fn simstep_traction(v_kmph: f32, v: &mut Vars) {
 
       //soros
       if (vars.ALL_menetkapcsolo == 0.0)  {vars.MOTOR_ARAM = 0.0;}
-      if (vars.ALL_menetkapcsolo == 1.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 278.352136 * f32::exp(-MOTOR_n_abs/384.635834));}
-      if (vars.ALL_menetkapcsolo == 2.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 523.408852 * f32::exp(-MOTOR_n_abs/438.300827));}
-      if (vars.ALL_menetkapcsolo == 3.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 987.436016 * f32::exp(-MOTOR_n_abs/369.425108));}
-      if (vars.ALL_menetkapcsolo == 4.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 2784.955342 * f32::exp(-MOTOR_n_abs/271.456658));}
-      if (vars.ALL_menetkapcsolo == 5.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 3397.588377 * f32::exp(-MOTOR_n_abs/286.902986));}
+      if (vars.ALL_menetkapcsolo == 1.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 278.352136 * f32::exp(-MOTOR_n_abs/384.635834));}
+      if (vars.ALL_menetkapcsolo == 2.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 523.408852 * f32::exp(-MOTOR_n_abs/438.300827));}
+      if (vars.ALL_menetkapcsolo == 3.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 987.436016 * f32::exp(-MOTOR_n_abs/369.425108));}
+      if (vars.ALL_menetkapcsolo == 4.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 2784.955342 * f32::exp(-MOTOR_n_abs/271.456658));}
+      if (vars.ALL_menetkapcsolo == 5.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 3397.588377 * f32::exp(-MOTOR_n_abs/286.902986));}
       //párhuzamos
-      if (vars.ALL_menetkapcsolo == 6.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 688.549854 * f32::exp(-MOTOR_n_abs/824.836537));}
-      if (vars.ALL_menetkapcsolo == 7.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 1019.405278 * f32::exp(-MOTOR_n_abs/748.305776));}
-      if (vars.ALL_menetkapcsolo == 8.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 1521.695394 * f32::exp(-MOTOR_n_abs/670.666604));}
-      if (vars.ALL_menetkapcsolo == 9.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 2828.184917 * f32::exp(-MOTOR_n_abs/602.971971));}
+      if (vars.ALL_menetkapcsolo == 6.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 688.549854 * f32::exp(-MOTOR_n_abs/824.836537));}
+      if (vars.ALL_menetkapcsolo == 7.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 1019.405278 * f32::exp(-MOTOR_n_abs/748.305776));}
+      if (vars.ALL_menetkapcsolo == 8.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 1521.695394 * f32::exp(-MOTOR_n_abs/670.666604));}
+      if (vars.ALL_menetkapcsolo == 9.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 2828.184917 * f32::exp(-MOTOR_n_abs/602.971971));}
       //sönt
-      if (vars.ALL_menetkapcsolo == 10.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 3328.184917 * f32::exp(-MOTOR_n_abs/602.971971));}
-      if (vars.ALL_menetkapcsolo == 11.0)  {vars.MOTOR_ARAM = vars.ALL_iranyvalto * f32::min(config::CFG_MAX_ARAM, 3828.184917 * f32::exp(-MOTOR_n_abs/602.971971));}
+      if (vars.ALL_menetkapcsolo == 10.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 3328.184917 * f32::exp(-MOTOR_n_abs/602.971971));}
+      if (vars.ALL_menetkapcsolo == 11.0)  {vars.MOTOR_ARAM = f32::min(config::CFG_MAX_ARAM, 3828.184917 * f32::exp(-MOTOR_n_abs/602.971971));}
 
       // VONÓERŐ
-      vars.MOTOR_VONOERO = vars.KONST_VONOERO * 55.071177 * (f32::exp(0.000960144 * vars.MOTOR_ARAM) - 1.0);
+      vars.MOTOR_VONOERO = vars.ALL_iranyvalto * vars.KONST_VONOERO * 55.071177 * (f32::exp(0.000960144 * vars.MOTOR_ARAM) - 1.0);
 
     };
     
@@ -72,7 +72,9 @@ pub fn simstep_traction(v_kmph: f32, v: &mut Vars) {
       vars.FEKERO_VILLANY_GERJEDT = f32::min(config::CFG_MAX_VFEKERO, vars.FEKERO_VILLANY_GERJEDT + config::CFG_const_FEKGERJEDES_SEB*lotus_script::time::delta());  //folyamatosan növekvő nagyságú fékerő (gerjed fel), felső korlát a max_vfékerő
     };
 
-    if (vars.ALL_menetkapcsolo == -1.0)  {vars.FEKERO_VILLANY = 0.5 * f32::min(config::CFG_MAX_VFEKERO, ( f32::abs(v_kmph -5.5)*config::CFG_MAX_VFEKERO*0.8/42.0 ) -4000.0 );}
+    // vars.FEKERO_VILLANY_GERJEDT = config::CFG_MAX_VFEKERO;
+
+    if (vars.ALL_menetkapcsolo == -1.0)  {vars.FEKERO_VILLANY = f32::min(config::CFG_MAX_VFEKERO, ( 0.8 * f32::abs(v_kmph -6.0)*config::CFG_MAX_VFEKERO*0.8/45.0 ) -4000.0 );}
     if (vars.ALL_menetkapcsolo == -2.0)  {vars.FEKERO_VILLANY = f32::min(config::CFG_MAX_VFEKERO, ( f32::abs(v_kmph -5.5)*config::CFG_MAX_VFEKERO*0.8/42.0 ) -4000.0 );}
     if (vars.ALL_menetkapcsolo == -3.0)  {vars.FEKERO_VILLANY = f32::min(config::CFG_MAX_VFEKERO, ( f32::abs(v_kmph -4.25)*config::CFG_MAX_VFEKERO/38.0 ) -4000.0 );}
     if (vars.ALL_menetkapcsolo == -4.0)  {vars.FEKERO_VILLANY = f32::min(config::CFG_MAX_VFEKERO, ( f32::abs(v_kmph -3.0)*config::CFG_MAX_VFEKERO/30.0 ) -4000.0 );}

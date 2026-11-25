@@ -40,13 +40,13 @@ pub const CFG_ABLAK_LE_SEB: f32 = 0.03;
 pub const CFG_SZEDO_SEB: f32 = 8.0;       // fok/m�sodperc
 pub const CFG_KONST_MAX_VONTATAS: f32 = 4500.0;
 pub const CFG_MAX_ARAM: f32 = 300.0;
-pub const CFG_MAX_VFEKERO: f32 = 12000.0;   //N-ban, villamosf?k
+pub const CFG_MAX_VFEKERO: f32 = 16000.0;   //N-ban, villamosf?k
 pub const CFG_MAX_LEGFEK: f32 = 18000.0;   //N-ban, l?gf?k
 pub const CFG_MAX_KEZIFEK: f32 = 6000.0;   //N-ban, k?zif?k
 pub const CFG_MAX_SINFEK: f32 = 85000.0;   //N-ban, s?nf?k
 
-pub const CFG_const_FEKGERJEDES_T: f32 = 0.8;        //ENNYI IDEIG TEHETETLEN A VFÉK
-pub const CFG_const_FEKGERJEDES_SEB: f32 = 6000.0;    // 15kN/s SEBESS?GGEL ?P?L FEL A VF?K F?KEREJE
+pub const CFG_const_FEKGERJEDES_T: f32 = 0.1;        //ENNYI IDEIG TEHETETLEN A VFÉK
+pub const CFG_const_FEKGERJEDES_SEB: f32 = 14000.0;    // 15kN/s SEBESS?GGEL ?P?L FEL A VF?K F?KEREJE
 
 
 pub const CFG_RUGOALLANDO: f32 = 250000.0; //N-ban a rug??lland? (laprug?k)

@@ -360,7 +360,7 @@ pub fn simstep_electronics(v_kmph: f32, v: &mut Vars) {
       vars.kapaszkodo_Y_szogseb = vars.kapaszkodo_Y_szogseb + ((-1.0*config::CFG_KAPASZKODO_const1*vars.PHY_gyorsulas + config::CFG_KAPASZKODO_const2*vars.kapaszkodo_Y_szog + config::CFG_KAPASZKODO_const3*vars.kapaszkodo_Y_szogseb*vars.kapaszkodo_Y_szogseb)*lotus_script::time::delta());
     }
     vars.kapaszkodo_Y_szog = vars.kapaszkodo_Y_szog - (vars.kapaszkodo_Y_szogseb * lotus_script::time::delta());
-    vars.kapaszkodo_Y_szog = 0.0;
+    // vars.kapaszkodo_Y_szog = 0.0;
     
     //-------------------------------------------------------------------------
     
