@@ -45,31 +45,10 @@ impl Script for ScriptEzres {
         .push("PantographUp", KeyCode::KeyE)
         // .push("PantographDn", KeyCode::KeyR)
 
-        .push("BKV1000_fekszelepPlusz", KeyCode::KeyP)
-        .push("BKV1000_fekszelepMinusz", KeyCode::KeyO)
+        
+        .push("Airbrake", KeyCode::Digit1)
+        // .push("Reverser", KeyCode::Digit0)
 
-
-        // .push("InsertKey_Reverser", KeyCode::NumpadSubtract)
-        // .push("HighVoltageMainSwitchOn", KeyCode::NumpadSubtract)
-        // .push("HighVoltageMainSwitchOff", KeyCode::NumpadSubtract)
-        // .push("ConverterOn", KeyCode::NumpadSubtract)
-        // .push("FrontLightFull", KeyCode::NumpadSubtract)
-        // .push("FrontLightDim", KeyCode::NumpadSubtract)
-        // .push("WiperToggle", KeyCode::NumpadSubtract)
-        // .push("SwitchToggleButton", KeyCode::NumpadSubtract)
-        // .push("DriverHeaterToggle", KeyCode::NumpadSubtract)
-        // .push("CockpitLightToggle", KeyCode::NumpadSubtract)
-        // .push("FrontWindowHeaterPlus", KeyCode::NumpadSubtract)
-        // .push("FrontWindowHeaterMinus", KeyCode::NumpadSubtract)
-        // .push("WindscreenWasher", KeyCode::NumpadSubtract)
-        // .push("Speaker", KeyCode::NumpadSubtract)
-        // .push("PassengerHeater", KeyCode::NumpadSubtract)
-        // .push("EmergencyLights", KeyCode::NumpadSubtract)
-        // .push("PassengerLights", KeyCode::NumpadSubtract)
-        // .push("ICS_vilagitas", KeyCode::NumpadSubtract)
-        // .push("ICS_kenyszkapcs", KeyCode::NumpadSubtract)
-        // .push("ICS_szuksegmenet", KeyCode::NumpadSubtract)
-        // .push("FrontLightFlash", KeyCode::NumpadSubtract)
         .build()
     }
 

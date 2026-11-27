@@ -1790,6 +1790,28 @@ const
   procedure fulke_OnFloatInput(id: string; value: single; cockpitIndex: byte);
   begin
 		
+    
+		//----------------------------------------------------------------------------------------------
+    //IRÁNYVÁLTÓ (A)
+    if (id = 'Reverser') and (fulke_A.aktiv) and (fulke_A.iranyvaltoBent) then
+    begin
+			if (value < 0.40) then
+      begin
+				fulke_A.iranyvalto.ertek := -1;
+				fulke_A.iranyvalto.poz := IRANYVALTO_HATRA;
+      end
+      else if (value > 0.50) then
+      begin
+				fulke_A.iranyvalto.ertek := 1;
+				fulke_A.iranyvalto.poz := IRANYVALTO_ELORE;
+      end
+      else
+      begin
+				fulke_A.iranyvalto.ertek := 0;
+				fulke_A.iranyvalto.poz := 0;
+      end;
+    end;
+
 		//----------------------------------------------------------------------------------------------
     //MENETKAPCSOLÓ (A)
     
@@ -1845,7 +1867,26 @@ const
       else if (fulke_A.menetkapcsolo.ertek > menetfokozatElozo_A) then HANG_A_menetkapcsolo_fekLe := 1;
     end;
     
-    
+    //----------------------------------------------------------------------------------------------
+    //IRÁNYVÁLTÓ (B)
+    if (id = 'Reverser') and (fulke_B.aktiv) and (fulke_B.iranyvaltoBent) then
+    begin
+			if (value < 0.40) then
+      begin
+				fulke_B.iranyvalto.ertek := -1;
+				fulke_B.iranyvalto.poz := IRANYVALTO_HATRA;
+      end
+      else if (value > 0.60) then
+      begin
+				fulke_B.iranyvalto.ertek := 1;
+				fulke_B.iranyvalto.poz := IRANYVALTO_ELORE;
+      end
+      else
+      begin
+				fulke_B.iranyvalto.ertek := 0;
+				fulke_B.iranyvalto.poz := 0;
+      end;
+    end;
     
     //----------------------------------------------------------------------------------------------
     //MENETKAPCSOLÓ (B)

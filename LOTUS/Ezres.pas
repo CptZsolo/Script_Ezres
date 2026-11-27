@@ -447,6 +447,7 @@
   Throttle; 
   Brake;
   Airbrake;
+  Reverser;
 }
 
 

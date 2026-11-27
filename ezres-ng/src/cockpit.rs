@@ -167,12 +167,8 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
     vars.fulke_A_kotelNemCsomo = ! vars.fulke_A_kotelCsomo;
     vars.fulke_B_kotelNemCsomo = ! vars.fulke_B_kotelCsomo;
 
-    //------------------------------------------------------------------------------------------
-    // JOYSTICK KEZELÉS
+    
 
-    
-    
-    
     //------------------------------------------------------------------------------------------
     //MENETSZABÁLYZÓ KEZELÉSE (A)
     if (vars.fulke_A_jottThrottle == 1.0) {
@@ -379,7 +375,7 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
     vars.fulke_A_kezifek.poz = (vars.fulke_A_kezifek.ertek * 15.0);
     
     //------------------------------------------------------------------------------------------
-    //K?ZIF?K LEK?PEZ?SE (B)
+    //KÉZIFÉK LEKÉPZÉSE (B)
     if (vars.fulke_B_kezifekCel == 1.0) {
       vars.fulke_B_kezifek.ertek = vars.fulke_B_kezifek.ertek + (lotus_script::time::delta()*20.0); //ennyi % m?sodpercenk?nt
       if (vars.fulke_B_kezifek.ertek > 100.0) { vars.fulke_B_kezifek.ertek = 100.0;}
@@ -394,7 +390,7 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
     
     
     //------------------------------------------------------------------------------------------
-    //L?GS?R?T? SZIMUL?L?SA
+    //LÉGSŰRÍTŐ SZÁMOLÁSA
     // automatikusan kikapcsol 6 Bar felett, bekapcsol 4,5 Bar alatt (ha kapcsol? & vanHalozat)
     if ( (vars.ALL_fektartalyNyomas < 450.0) && (vars.VanHalozat) && (vars.fulke_A_legsurito.ertek) && (! vars.legsuritoJar) ) {
       vars.legsuritoJar = true;
@@ -445,15 +441,91 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
     //------------------------------------------------------------------------------------------
     // "JOYSTICK" KEZELÉS //
 
-    // NOTES: Perpillanat így beragad a változó értéke, azaz folyton felülcsapja ez a billentyűzet parancsot - erre ki kell valamit találni majd
-    //FÉKSZELEP (A)
-    // let JOY_Airbrake = get_var::<f32>("JOY_Airbrake");
+    let airbrake_in = lotus_script::axis::value("Airbrake");
+    let reverser_in = lotus_script::axis::value("Reverser");
+    let throttle_in = lotus_script::axis::value("Throttle");
+    let brake_in = lotus_script::axis::value("Brake");
+    log::info!("Rev: {:?}, Throttle: {:?}, Brake: {:?}, Airbrake: {:?}", reverser_in, throttle_in, brake_in, airbrake_in);
 
-    // if (vars.fulke_A_aktiv) && (vars.fulke_A_fekszelepBent) {
-    //   if (JOY_Airbrake < 0.45) {vars.fulke_A_fekszelep.ertek = -1.0 + ((1.0 / 0.45) * JOY_Airbrake);}
-    //   else if (JOY_Airbrake > 0.55) {vars.fulke_A_fekszelep.ertek = (2.0 / 0.45) * (JOY_Airbrake - 0.55);}
-    //   else {vars.fulke_A_fekszelep.ertek = 0.0;}
+    //FÉKSZELEP (A)
+    if vars.A_CP_fekszelepBent {
+      if (airbrake_in < 0.45) {
+        vars.fulke_A_fekszelep.ertek = -1.0 + ((1.0 / 0.45) * airbrake_in);
+      }
+      else if (airbrake_in > 0.55) {
+        vars.fulke_A_fekszelep.ertek = (2.0 / 0.45) * (airbrake_in - 0.55);
+      }
+      else {
+        vars.fulke_A_fekszelep.ertek = 0.0;
+      }
+    }
+
+    // IRÁNYVÁLTÓ (A)
+    // if vars.A_CP_iranyvaltoBent {
+    //   if (reverser_in < 0.4) {
+    //     vars.fulke_A_iranyvalto.ertek = -1.0;
+    //     vars.fulke_A_iranyvalto.poz = config::CFG_IRANYVALTO_HATRA;
+    //   }
+    //   else if (reverser_in > 0.6) {
+    //     vars.fulke_A_iranyvalto.ertek = 1.0;
+    //     vars.fulke_A_iranyvalto.poz = config::CFG_IRANYVALTO_ELORE;
+    //   }
+    //   else {
+    //     vars.fulke_A_iranyvalto.ertek = 0.0;
+    //     vars.fulke_A_iranyvalto.poz = 0.0;
+    //   }
     // }
+
+    // KONTROLLER (A)
+    if vars.fulke_A_aktiv {
+      if (throttle_in > 0.05) {
+        //tényleges kontroller állás (11 menet fokozat)
+        vars.fulke_A_menetkapcsolo.ertek = f32::floor(throttle_in * 11.0);
+      }
+      else if (brake_in > 0.05) {
+        //tényleges kontroller állás (11 menet fokozat)
+        vars.fulke_A_menetkapcsolo.ertek = -1.0 * f32::floor(brake_in * 7.0);
+      }
+      else {
+        vars.fulke_A_menetkapcsolo.ertek = 0.0;
+        vars.fulke_A_menetkapcsolo.poz = config::CFG_MENETKAPCSOLO_0;
+      }
+
+      // log::info!("KONTROLLER: {:?}", vars.fulke_A_menetkapcsolo.ertek);
+    }
+
+    // ---------------------- //
+
+    //FÉKSZELEP (B)
+    if vars.B_CP_fekszelepBent {
+      if (airbrake_in < 0.45) {
+        vars.fulke_B_fekszelep.ertek = -1.0 + ((1.0 / 0.45) * airbrake_in);
+      }
+      else if (airbrake_in > 0.55) {
+        vars.fulke_B_fekszelep.ertek = (2.0 / 0.45) * (airbrake_in - 0.55);
+      }
+      else {
+        vars.fulke_B_fekszelep.ertek = 0.0;
+      }
+    }
+
+    // KONTROLLER (B)
+    if vars.fulke_B_aktiv {
+      if (throttle_in > 0.05) {
+        //tényleges kontroller állás (11 menet fokozat)
+        vars.fulke_B_menetkapcsolo.ertek = f32::floor(throttle_in * 11.0);
+      }
+      else if (brake_in > 0.05) {
+        //tényleges kontroller állás (11 menet fokozat)
+        vars.fulke_B_menetkapcsolo.ertek = -1.0 * f32::floor(brake_in * 7.0);
+      }
+      else {
+        vars.fulke_B_menetkapcsolo.ertek = 0.0;
+        vars.fulke_B_menetkapcsolo.poz = config::CFG_MENETKAPCSOLO_0;
+      }
+
+      // log::info!("KONTROLLER: {:?}", vars.fulke_A_menetkapcsolo.ertek);
+    }
     
     
     
@@ -824,7 +896,7 @@ pub fn on_message_cockpit(v: &mut Vars, a: ActionEvent) {
     
     //----------------------------------------------------------------------------------------------
     //BAL AJT?SZELEP
-    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_A_CP_ajtoBalKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_ajtoBalKapcsolo") && vars.fulke_A_aktiv) 
+    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_A_CP_ajtoBalKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "DoorReleaseLeft") && vars.fulke_A_aktiv) 
     {
       if (vars.fulke_A_ajtoBal.ertek)  {set_var("HANG_A_ajtoszelepKI", true);} else {set_var("HANG_A_ajtoszelepBE", true);}
       vars.fulke_A_ajtoBal.ertek = ! vars.fulke_A_ajtoBal.ertek;
@@ -834,7 +906,7 @@ pub fn on_message_cockpit(v: &mut Vars, a: ActionEvent) {
     
     //----------------------------------------------------------------------------------------------
     //JOBB AJT?SZELEP
-    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_A_CP_ajtoJobbKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_ajtoJobbKapcsolo") && vars.fulke_A_aktiv) 
+    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_A_CP_ajtoJobbKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "DoorReleaseRight") && vars.fulke_A_aktiv) 
     {
       if (vars.fulke_A_ajtoJobb.ertek)  {set_var("HANG_A_ajtoszelepKI", true);} else {set_var("HANG_A_ajtoszelepBE", true);}
       vars.fulke_A_ajtoJobb.ertek = ! vars.fulke_A_ajtoJobb.ertek;
@@ -871,12 +943,12 @@ pub fn on_message_cockpit(v: &mut Vars, a: ActionEvent) {
     
     //----------------------------------------------------------------------------------------------
     //CSENG?
-    if (a.state.kind.is_just_pressed() && (a.name == "Bell1.0") && vars.fulke_A_aktiv) || (a.state.kind.is_just_pressed() && (a.name == "BKV1000_A_CP_csengo") ) 
+    if (a.state.kind.is_just_pressed() && (a.name == "Bell1") && vars.fulke_A_aktiv) || (a.state.kind.is_just_pressed() && (a.name == "BKV1000_A_CP_csengo") ) 
     {
       set_var("HANG_A_csengo", true);
       vars.fulke_A_csengo.ertek = true;
     }
-    if (a.state.kind.is_just_released() && (a.name == "Bell1.0") ) || (a.state.kind.is_just_released() && (a.name == "BKV1000_A_CP_csengo") )  {vars.fulke_A_csengo.ertek = false;}
+    if (a.state.kind.is_just_released() && (a.name == "Bell1") ) || (a.state.kind.is_just_released() && (a.name == "BKV1000_A_CP_csengo") )  {vars.fulke_A_csengo.ertek = false;}
     if (vars.fulke_A_csengo.ertek)  {vars.fulke_A_csengo.poz = -0.03;}
     else {vars.fulke_A_csengo.poz = 0.0;}
     
@@ -1163,7 +1235,7 @@ pub fn on_message_cockpit(v: &mut Vars, a: ActionEvent) {
     
     //----------------------------------------------------------------------------------------------
     //BAL AJT?SZELEP (AMI IGAZ?B?L A JOBB OLDAL)
-    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_B_CP_ajtoBalKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_ajtoBalKapcsolo") && vars.fulke_B_aktiv) 
+    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_B_CP_ajtoBalKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "DoorReleaseLeft") && vars.fulke_B_aktiv) 
     {
       if (vars.fulke_B_ajtoBal.ertek)  {set_var("HANG_B_ajtoszelepKI", true);} else {set_var("HANG_B_ajtoszelepBE", true);}
       vars.fulke_B_ajtoBal.ertek = ! vars.fulke_B_ajtoBal.ertek;
@@ -1173,7 +1245,7 @@ pub fn on_message_cockpit(v: &mut Vars, a: ActionEvent) {
     
     //----------------------------------------------------------------------------------------------
     //JOBB AJT?SZELEP (AMI IGAZ?B?L A BAL OLDAL)
-    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_B_CP_ajtoJobbKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_ajtoJobbKapcsolo") && vars.fulke_B_aktiv) 
+    if ( a.state.kind.is_just_pressed() && (a.name == "BKV1000_B_CP_ajtoJobbKapcsolo") ) || ( a.state.kind.is_just_pressed() && (a.name == "DoorReleaseRight") && vars.fulke_B_aktiv) 
     {
       if (vars.fulke_B_ajtoJobb.ertek)  {set_var("HANG_B_ajtoszelepKI", true);} else {set_var("HANG_B_ajtoszelepBE", true);}
       vars.fulke_B_ajtoJobb.ertek = ! vars.fulke_B_ajtoJobb.ertek;
@@ -1210,12 +1282,12 @@ pub fn on_message_cockpit(v: &mut Vars, a: ActionEvent) {
     
     //----------------------------------------------------------------------------------------------
     //CSENG?
-    if (a.state.kind.is_just_pressed() && (a.name == "Bell1.0") && vars.fulke_B_aktiv) || (a.state.kind.is_just_pressed() && (a.name == "BKV1000_B_CP_csengo") ) 
+    if (a.state.kind.is_just_pressed() && (a.name == "Bell1") && vars.fulke_B_aktiv) || (a.state.kind.is_just_pressed() && (a.name == "BKV1000_B_CP_csengo") ) 
     {
       set_var("HANG_B_csengo", true);
       vars.fulke_B_csengo.ertek = true;
     }
-    if (a.state.kind.is_just_released() && (a.name == "Bell1.0") ) || (a.state.kind.is_just_released() && (a.name == "BKV1000_B_CP_csengo") )  {vars.fulke_B_csengo.ertek = false;}
+    if (a.state.kind.is_just_released() && (a.name == "Bell1") ) || (a.state.kind.is_just_released() && (a.name == "BKV1000_B_CP_csengo") )  {vars.fulke_B_csengo.ertek = false;}
     if (vars.fulke_B_csengo.ertek)  {vars.fulke_B_csengo.poz = -0.03}
     else {vars.fulke_B_csengo.poz = 0.0;}
     

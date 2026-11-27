@@ -2,15 +2,14 @@ const
   SZEDO_SEB = 8;       // fok/m�sodperc
   KONST_MAX_VONTATAS = 4500;
   MAX_ARAM = 300;
-  MAX_VFEKERO = 12000;   //N-ban, villamosf�k
+  MAX_VFEKERO = 16000;   //N-ban, villamosf�k
   MAX_LEGFEK = 18000;   //N-ban, l�gf�k
   MAX_KEZIFEK = 6000;   //N-ban, k�zif�k
   MAX_SINFEK = 85000;   //N-ban, s�nf�k
   
-  const_FEKGERJEDES_T = 0.8;        //ENNYI IDEIG TEHETETLEN A VFÉK
-  const_FEKGERJEDES_SEB = 6000;    // 15kN/s SEBESS�GGEL �P�L FEL A VF�K F�KEREJE
+  const_FEKGERJEDES_T = 0.1;        //ENNYI IDEIG TEHETETLEN A VFÉK
+  const_FEKGERJEDES_SEB = 14000;    // 15kN/s SEBESS�GGEL �P�L FEL A VF�K F�KEREJE
 
-  
   RUGOALLANDO = 250000; //N-ban a rug��lland� (laprug�k)
   
   //AJT�K
@@ -127,22 +126,22 @@ var
 
       //soros
       if (ALL_menetkapcsolo = 0) then MOTOR_ARAM := 0;
-      if (ALL_menetkapcsolo = 1) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 278.352136 * exp(-MOTOR_n_abs/384.635834));
-      if (ALL_menetkapcsolo = 2) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 523.408852 * exp(-MOTOR_n_abs/438.300827));
-      if (ALL_menetkapcsolo = 3) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 987.436016 * exp(-MOTOR_n_abs/369.425108));
-      if (ALL_menetkapcsolo = 4) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 2784.955342 * exp(-MOTOR_n_abs/271.456658));
-      if (ALL_menetkapcsolo = 5) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 3397.588377 * exp(-MOTOR_n_abs/286.902986));
+      if (ALL_menetkapcsolo = 1) then MOTOR_ARAM := min(MAX_ARAM, 278.352136 * exp(-MOTOR_n_abs/384.635834));
+      if (ALL_menetkapcsolo = 2) then MOTOR_ARAM := min(MAX_ARAM, 523.408852 * exp(-MOTOR_n_abs/438.300827));
+      if (ALL_menetkapcsolo = 3) then MOTOR_ARAM := min(MAX_ARAM, 987.436016 * exp(-MOTOR_n_abs/369.425108));
+      if (ALL_menetkapcsolo = 4) then MOTOR_ARAM := min(MAX_ARAM, 2784.955342 * exp(-MOTOR_n_abs/271.456658));
+      if (ALL_menetkapcsolo = 5) then MOTOR_ARAM := min(MAX_ARAM, 3397.588377 * exp(-MOTOR_n_abs/286.902986));
       //párhuzamos
-      if (ALL_menetkapcsolo = 6) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 688.549854 * exp(-MOTOR_n_abs/824.836537));
-      if (ALL_menetkapcsolo = 7) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 1019.405278 * exp(-MOTOR_n_abs/748.305776));
-      if (ALL_menetkapcsolo = 8) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 1521.695394 * exp(-MOTOR_n_abs/670.666604));
-      if (ALL_menetkapcsolo = 9) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 2828.184917 * exp(-MOTOR_n_abs/602.971971));
+      if (ALL_menetkapcsolo = 6) then MOTOR_ARAM := min(MAX_ARAM, 688.549854 * exp(-MOTOR_n_abs/824.836537));
+      if (ALL_menetkapcsolo = 7) then MOTOR_ARAM := min(MAX_ARAM, 1019.405278 * exp(-MOTOR_n_abs/748.305776));
+      if (ALL_menetkapcsolo = 8) then MOTOR_ARAM := min(MAX_ARAM, 1521.695394 * exp(-MOTOR_n_abs/670.666604));
+      if (ALL_menetkapcsolo = 9) then MOTOR_ARAM := min(MAX_ARAM, 2828.184917 * exp(-MOTOR_n_abs/602.971971));
       //sönt
-      if (ALL_menetkapcsolo = 10) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 3328.184917 * exp(-MOTOR_n_abs/602.971971));
-      if (ALL_menetkapcsolo = 11) then MOTOR_ARAM := ALL_iranyvalto * min(MAX_ARAM, 3828.184917 * exp(-MOTOR_n_abs/602.971971));
+      if (ALL_menetkapcsolo = 10) then MOTOR_ARAM := min(MAX_ARAM, 3328.184917 * exp(-MOTOR_n_abs/602.971971));
+      if (ALL_menetkapcsolo = 11) then MOTOR_ARAM := min(MAX_ARAM, 3828.184917 * exp(-MOTOR_n_abs/602.971971));
 
       // VONÓERŐ
-      MOTOR_VONOERO := KONST_VONOERO * 55.071177 * (Exp(0.000960144 * MOTOR_ARAM) - 1);
+      MOTOR_VONOERO := ALL_iranyvalto * KONST_VONOERO * 55.071177 * (Exp(0.000960144 * MOTOR_ARAM) - 1);
       M_Axle_N_0_0 := MOTOR_VONOERO;
 
     end;
