@@ -1,8 +1,5 @@
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, nonstandard_style, dead_code, unused)]
 
-use lotus_extra::bb_system;
-use lotus_extra::bb_system::basic;
-use lotus_extra::bb_system::cockpit;
 use lotus_script::action::ActionEvent;
 use lotus_script::prelude::*;
 use crate::Vars;
@@ -455,7 +452,7 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
       else if (airbrake_in > 0.55) {
         vars.fulke_A_fekszelep.ertek = (2.0 / 0.45) * (airbrake_in - 0.55);
       }
-      else {
+      else if (airbrake_in != 0.5) {
         vars.fulke_A_fekszelep.ertek = 0.0;
       }
     }
@@ -478,15 +475,15 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
 
     // KONTROLLER (A)
     if vars.fulke_A_aktiv {
-      if (throttle_in > 0.05) {
+      if (throttle_in > 0.05) && (throttle_in != 0.5) {
         //tényleges kontroller állás (11 menet fokozat)
         vars.fulke_A_menetkapcsolo.ertek = f32::floor(throttle_in * 11.0);
       }
-      else if (brake_in > 0.05) {
+      else if (brake_in > 0.05) && (brake_in != 0.5) {
         //tényleges kontroller állás (11 menet fokozat)
         vars.fulke_A_menetkapcsolo.ertek = -1.0 * f32::floor(brake_in * 7.0);
       }
-      else {
+      else if (throttle_in != 0.5) && (brake_in != 0.5) {
         vars.fulke_A_menetkapcsolo.ertek = 0.0;
         vars.fulke_A_menetkapcsolo.poz = config::CFG_MENETKAPCSOLO_0;
       }
@@ -504,22 +501,22 @@ pub fn simstep_cockpit(v_kmph: f32, v: &mut Vars) {
       else if (airbrake_in > 0.55) {
         vars.fulke_B_fekszelep.ertek = (2.0 / 0.45) * (airbrake_in - 0.55);
       }
-      else {
+      else if (airbrake_in != 0.5) {
         vars.fulke_B_fekszelep.ertek = 0.0;
       }
     }
 
     // KONTROLLER (B)
     if vars.fulke_B_aktiv {
-      if (throttle_in > 0.05) {
+      if (throttle_in > 0.05) && (throttle_in != 0.5) {
         //tényleges kontroller állás (11 menet fokozat)
         vars.fulke_B_menetkapcsolo.ertek = f32::floor(throttle_in * 11.0);
       }
-      else if (brake_in > 0.05) {
+      else if (brake_in > 0.05) && (brake_in != 0.5) {
         //tényleges kontroller állás (11 menet fokozat)
         vars.fulke_B_menetkapcsolo.ertek = -1.0 * f32::floor(brake_in * 7.0);
       }
-      else {
+      else if (throttle_in != 0.5) && (brake_in != 0.5) {
         vars.fulke_B_menetkapcsolo.ertek = 0.0;
         vars.fulke_B_menetkapcsolo.poz = config::CFG_MENETKAPCSOLO_0;
       }
